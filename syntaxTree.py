@@ -11,7 +11,7 @@ def draw(nodes):
     G=nx.Graph()
     counter = 0
     for node in nodes:
-        if node.is_child == 1:
+        if node.is_rectangle == 0:
             shape = "o"
         else:
             shape = "s"
@@ -38,26 +38,26 @@ def draw(nodes):
     nx.draw(G, pos,node_shape = "o", nodelist = [sNode[0] for sNode in filter(lambda x: x[1]["s"]=="o",G.nodes(data = True))], node_color = "k", node_size = 900)
     nx.draw_networkx_labels(G,pos,labels=label,font_size=8,font_color='r', font_weight="bold")
     plt.show()
-nodes = []
-nodes.append(Node(-1, -1, "read\n(x)", 1))          #0
-nodes.append(Node(0, 0, "if", 1))                   #1
-nodes.append(Node(1, 1, "op\n(<)", 2))              #2
-nodes.append(Node(2, 1, "const\n(0)", 3))           #3
-nodes.append(Node(2, 1, "id\n(x)", 3))              #4
-nodes.append(Node(1, 0, "assign\n(fact)", 2))       #5
-nodes.append(Node(5, 1, "const\n(1)", 3))           #6
-nodes.append(Node(5, 0, "repeat", 2))               #7
-nodes.append(Node(7, 1, "assign\n(fact)", 3))       #8
-nodes.append(Node(8, 1, "op\n(*)", 4))              #9
-nodes.append(Node(9, 1, "id\n(fact)", 5))           #10
-nodes.append(Node(9, 1, "id\n(x)", 5))              #11
-nodes.append(Node(8, 0, "assign\n(x)", 3))          #12
-nodes.append(Node(12, 1, "op\n(-)", 4))             #13
-nodes.append(Node(13, 1, "id\n(x)", 5))             #14
-nodes.append(Node(13, 1, "const\n(1)", 5))          #15
-nodes.append(Node(7, 1, "op\n(=)", 3))              #16
-nodes.append(Node(16, 1, "id\n(x)", 4))             #17
-nodes.append(Node(16, 1, "const\n(0)", 4))          #18
-nodes.append(Node(7, 0, "write", 2))                #19
-nodes.append(Node(19, 1, "id\n(fact)", 3))          #20
-draw(nodes)
+# nodes = []
+# nodes.append(Node(-1, -1, "read\n(x)", 1, 1))          #0
+# nodes.append(Node(0, 0, "if", 1, 1))                   #1
+# nodes.append(Node(1, 1, "op\n(<)", 2, 0))              #2
+# nodes.append(Node(2, 1, "const\n(0)", 3, 0))           #3
+# nodes.append(Node(2, 1, "id\n(x)", 3, 0))              #4
+# nodes.append(Node(1, 1, "assign\n(fact)", 2, 1))       #5
+# nodes.append(Node(5, 1, "const\n(1)", 3, 0))           #6
+# nodes.append(Node(5, 0, "repeat", 2, 1))               #7
+# nodes.append(Node(7, 1, "assign\n(fact)", 3, 1))       #8
+# nodes.append(Node(8, 1, "op\n(*)", 4, 0))              #9
+# nodes.append(Node(9, 1, "id\n(fact)", 5, 0))           #10
+# nodes.append(Node(9, 1, "id\n(x)", 5, 0))              #11
+# nodes.append(Node(8, 0, "assign\n(x)", 3, 1))          #12
+# nodes.append(Node(12, 1, "op\n(-)", 4, 0))             #13
+# nodes.append(Node(13, 1, "id\n(x)", 5, 0))             #14
+# nodes.append(Node(13, 1, "const\n(1)", 5, 0))          #15
+# nodes.append(Node(7, 1, "op\n(=)", 3, 0))              #16
+# nodes.append(Node(16, 1, "id\n(x)", 4, 0))             #17
+# nodes.append(Node(16, 1, "const\n(0)", 4, 0))          #18
+# nodes.append(Node(7, 0, "write", 2, 1))                #19
+# nodes.append(Node(19, 1, "id\n(fact)", 3, 0))          #20
+# draw(nodes)
