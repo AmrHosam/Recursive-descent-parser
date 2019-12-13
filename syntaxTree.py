@@ -1,12 +1,29 @@
 from NodeClass import Node
 import networkx as nx
 import matplotlib.pyplot as plt
+import functools
+def cmp(node1, node2):
+    if node1.level < node2.level:
+        return -1
+    elif node1.level > node2.level:
+        return 1
+    else:
+        if node1.parent <= node2.parent:
+            return -1
+        else:
+            return 1
 
 def draw(nodes):
     y_step = -2
     x_step = 1
     level_pos = []
-    for i in range(Node.total_number_of_levels):
+    max_level = 0
+    nodes = sorted(nodes, key=functools.cmp_to_key(cmp))
+    for i in range (len(nodes)):
+        if nodes[i].level > max_level:
+            max_level = nodes[i].level
+        print(nodes[i].key, nodes[i].parent, nodes[i].level)
+    for i in range(max_level + 1):
         level_pos.append([-50,y_step * i])
     G=nx.Graph()
     counter = 0
@@ -20,9 +37,9 @@ def draw(nodes):
             nodes[node.parent].number_of_children += 1
         else:
             x = 0
-        pos = (max(x, level_pos[node.level - 1][0]), level_pos[node.level - 1][1])
+        pos = (max(x, level_pos[node.level][0]), level_pos[node.level][1])
         node.posX = max(x, level_pos[node.level - 1][0])
-        level_pos[node.level - 1][0] = max(x, level_pos[node.level - 1][0]) + x_step
+        level_pos[node.level][0] = max(x, level_pos[node.level][0]) + x_step
         G.add_node(counter, s = shape, pos = pos, label  = node.key)
         if node.parent >= 0:
             G.add_edge(counter, node.parent)
@@ -33,7 +50,7 @@ def draw(nodes):
     pos = nx.get_node_attributes(G,"pos")
     shape = nx.get_node_attributes(G,"s")
     label = nx.get_node_attributes(G,"label")
-    print(G.nodes)
+    # print(G.nodes)
     nx.draw(G, pos,node_shape = "s", nodelist = [sNode[0] for sNode in filter(lambda x: x[1]["s"]=="s",G.nodes(data = True))], node_color="k", node_size = 900)
     nx.draw(G, pos,node_shape = "o", nodelist = [sNode[0] for sNode in filter(lambda x: x[1]["s"]=="o",G.nodes(data = True))], node_color = "k", node_size = 900)
     nx.draw_networkx_labels(G,pos,labels=label,font_size=8,font_color='r', font_weight="bold")
