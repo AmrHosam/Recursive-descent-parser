@@ -186,13 +186,15 @@ def factor (parent_id,ischild,parent_level):
         match(tokens[n].value)
         if len(nodelist)>0:
             level=nodelist[int(parent_id)].level+1
-        nodelist.append(Node(parent_id,ischild,tokens[n-1].value,level))
+        key = 'Const (' + tokens[n-1].value + ')'
+        nodelist.append(Node(parent_id,ischild,key,level))
         factor_id=len(nodelist)-1
     elif tokens[n].type=='IDENTIFIER' :
         match(tokens[n].value)
         if len(nodelist)>0:
             level=nodelist[int(parent_id)].level+1
-        nodelist.append(Node(parent_id,ischild,tokens[n-1].value,level))
+        key = 'id (' + tokens[n-1].value + ')'
+        nodelist.append(Node(parent_id,ischild,key,level))
         factor_id=len(nodelist)-1
     else : 
         error()
