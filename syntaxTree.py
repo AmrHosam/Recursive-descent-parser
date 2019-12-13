@@ -25,7 +25,12 @@ nodes.append(Node(16, 1, "const\n(0)", 4))          #18
 nodes.append(Node(7, 0, "write", 2))                #19
 nodes.append(Node(19, 1, "id\n(fact)", 3))          #20
 
-
+# nodes.append(Node(17, 1, "id\n(fact)", 5))          #21
+# nodes.append(Node(21, 1, "id\n(fact)", 6))          #22
+# nodes.append(Node(22, 1, "id\n(fact)", 7))          #23
+# nodes.append(Node(23, 1, "id\n(fact)", 8))          #24
+# nodes.append(Node(24, 1, "id\n(fact)", 9))          #25
+# nodes.append(Node(25, 1, "id\n(fact)", 10))         #26
 y_step = -2
 x_step = 1
 level_pos = []
@@ -38,9 +43,17 @@ for node in nodes:
         shape = "o"
     else:
         shape = "s"
-    if node.parent != -1:
-        x = nodes[node.parent].posX + nodes[node.parent].number_of_children - 1
+    if node.parent != -1 and node.is_child == 1:
+        if nodes[node.parent].number_of_children == 0:
+            x = nodes[node.parent].posX - x_step
+        elif nodes[node.parent].number_of_children == 1 and nodes[node.parent].key == "if":
+            x = nodes[node.parent].posX
+        else:
+            x = nodes[node.parent].posX + x_step
+        # x = nodes[node.parent].posX + nodes[node.parent].number_of_children - 1
         nodes[node.parent].number_of_children += 1
+    elif node.is_child == 0:
+        x = nodes[node.parent].posX + (Node.total_number_of_levels - node.level) * 2
     else:
         x = 0
     pos = (max(x, level_pos[node.level - 1][0]), level_pos[node.level - 1][1])
