@@ -1,11 +1,12 @@
 #import numpy as np
 class Node:
     total_number_of_levels = 0
-    def __init__(self, parent, is_child, key, level):
+    def __init__(self, parent, is_child, key, level,is_rectangle):
         self.parent = parent
         self.is_child = is_child
         self.key = key
         self.level = level
+        self.is_rectangle =is_rectangle
         if(level > Node.total_number_of_levels):
             Node.total_number_of_levels = level
 class token:
@@ -56,7 +57,7 @@ def term(parent_id,ischild,parent_level):
              level=parent_level
          if ischild==1 :
             level = level + 1
-         nodelist.append(Node(parent_id,ischild,key,level))
+         nodelist.append(Node(parent_id,ischild,key,level,0))
          #len(nodelist)-1+=1
          op_id = len(nodelist)-1
          factor_level=level
@@ -72,7 +73,7 @@ def term(parent_id,ischild,parent_level):
              new_op_level=level 
              old_op_level=nodelist[int(op_id)].level+1 
              key=tokens[n-1].value #operator
-             nodelist.append(Node(parent_id,ischild,key,new_op_level))
+             nodelist.append(Node(parent_id,ischild,key,new_op_level,0))
              setattr(nodelist[int(op_id)], 'level', old_op_level) #old operator becomes at low level 
              setattr(nodelist[int(op_id)], 'parent', len(nodelist)-1) #parent id is the parent of caller of this function
              
@@ -103,7 +104,7 @@ def simple_exp(parent_id,ischild,parent_level):
              level=parent_level
          if ischild==1 :
             level = level + 1
-         nodelist.append(Node(parent_id,ischild,key,level))
+         nodelist.append(Node(parent_id,ischild,key,level,0))
          #len(nodelist)-1+=1
          op_id = len(nodelist)-1
          term_level=level
@@ -120,7 +121,7 @@ def simple_exp(parent_id,ischild,parent_level):
              new_op_level=level 
              old_op_level=nodelist[int(op_id)].level+1 
              key=tokens[n-1].value
-             nodelist.append(Node(parent_id,ischild,key,new_op_level))
+             nodelist.append(Node(parent_id,ischild,key,new_op_level,0))
              setattr(nodelist[int(op_id)], 'level', old_op_level) #old operator becomes at low level 
              setattr(nodelist[int(op_id)], 'parent', len(nodelist)-1) #parent id is the parent of caller of this function
              
@@ -147,7 +148,7 @@ def exp(parent_id,ischild,parent_level):
              level=parent_level
          if ischild==1 :
             level = level + 1
-         nodelist.append(Node(parent_id,ischild,key,level))
+         nodelist.append(Node(parent_id,ischild,key,level,0))
          #len(nodelist)-1+=1
          op_id = len(nodelist)-1
          exp_level=level
@@ -163,7 +164,7 @@ def exp(parent_id,ischild,parent_level):
              new_op_level=level 
              old_op_level=nodelist[int(op_id)].level+1 
              key=tokens[n-1].value
-             nodelist.append(Node(parent_id,ischild,key,new_op_level))
+             nodelist.append(Node(parent_id,ischild,key,new_op_level,0))
              setattr(nodelist[int(op_id)], 'level', old_op_level) #old operator becomes at low level 
              setattr(nodelist[int(op_id)], 'parent', len(nodelist)-1) #parent id is the parent of caller of this function
              
@@ -187,14 +188,14 @@ def factor (parent_id,ischild,parent_level):
         if len(nodelist)>0:
             level=nodelist[int(parent_id)].level+1
         key = 'Const (' + tokens[n-1].value + ')'
-        nodelist.append(Node(parent_id,ischild,key,level))
+        nodelist.append(Node(parent_id,ischild,key,level,0))
         factor_id=len(nodelist)-1
     elif tokens[n].type=='IDENTIFIER' :
         match(tokens[n].value)
         if len(nodelist)>0:
             level=nodelist[int(parent_id)].level+1
         key = 'id (' + tokens[n-1].value + ')'
-        nodelist.append(Node(parent_id,ischild,key,level))
+        nodelist.append(Node(parent_id,ischild,key,level,0))
         factor_id=len(nodelist)-1
     else : 
         error()
@@ -209,7 +210,7 @@ def write_statement(parent_id,ischild,parent_level):
          level=parent_level
      if ischild==1 :
          level = level + 1
-     nodelist.append(Node(parent_id,ischild,key,level))
+     nodelist.append(Node(parent_id,ischild,key,level,1))
      write_id=len(nodelist)-1
      #len(nodelist)-1+=1
      child=1
@@ -225,7 +226,7 @@ def repeat_statement(parent_id,ischild,parent_level):
          level=parent_level
      if ischild==1 :
          level = level + 1
-     nodelist.append(Node(parent_id,ischild,key,level))
+     nodelist.append(Node(parent_id,ischild,key,level,1))
      repeat_id= len(nodelist)-1
      #len(nodelist)-1+=1
      child=1
@@ -244,7 +245,7 @@ def read_statement(parent_id,ischild,parent_level):
          level=parent_level
      if ischild==1 :
          level = level + 1
-     nodelist.append(Node(parent_id,ischild,key,level))
+     nodelist.append(Node(parent_id,ischild,key,level,1))
      #len(nodelist)-1+=1
      read_id= len(nodelist)-1
      return read_id  
@@ -260,7 +261,7 @@ def assign_statement(parent_id,ischild,parent_level):
          level=parent_level
      if ischild==1 :
          level = level + 1
-     nodelist.append(Node(parent_id,ischild,key,level))
+     nodelist.append(Node(parent_id,ischild,key,level,1))
      assign_id= len(nodelist)-1 #last node created is assign
      #len(nodelist)-1+=1
      child=1
@@ -274,7 +275,7 @@ def if_statement(parent_id,ischild,parent_level):
      if ischild==1 :
          level = level + 1
      key= 'if'    
-     nodelist.append(Node(parent_id,ischild,key,level))
+     nodelist.append(Node(parent_id,ischild,key,level,1))
      #len(nodelist)-1+=1
      if_id=len(nodelist)-1 #last node created is "if" so we make it parent
      child=1
@@ -312,7 +313,7 @@ def stmt_sequence(parent_id,ischild,parent_level):
 tokens=[token('read','READ'),token ('x','IDENTIFIER'),token (';','SEMICOLON'),token('if','IF'),
 token('0','NUMBER'),token('<','LESSTHAN'),token ('x','IDENTIFIER'),token('then','THEN'),token ('fact','IDENTIFIER')
 ,token (':=','ASSIGN'),token('1','NUMBER'),token (';','SEMICOLON'),token('repeat','REPEAT'),token ('fact','IDENTIFIER')
-,token (':=','ASSIGN'),token ('fact','IDENTIFIER'),token ('+','PLUS'),token ('x','IDENTIFIER'),token ('*','MULT'),token ('y','IDENTIFIER'),token (';','SEMICOLON'),token ('x','IDENTIFIER'),token (':=','ASSIGN'),token ('x','IDENTIFIER'),token ('-','MINUS'),token('1','NUMBER')
+,token (':=','ASSIGN'),token ('fact','IDENTIFIER'),token ('+','PLUS'),token ('x','IDENTIFIER'),token ('*','MULT'),token ('y','IDENTIFIER'),token ('-','MINUS'),token ('z','IDENTIFIER'),token (';','SEMICOLON'),token ('x','IDENTIFIER'),token (':=','ASSIGN'),token ('x','IDENTIFIER'),token ('-','MINUS'),token('1','NUMBER')
 ,token('until','UNTIL'),token ('x','IDENTIFIER'),token ('=','EQUAL'),token('0','NUMBER'),token (';','SEMICOLON'),token('write','WRITE'),token ('fact','IDENTIFIER'),token ('end','END')]
 stmt_sequence(-1,-1,0)
 correction()
