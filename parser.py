@@ -1,14 +1,6 @@
 #import numpy as np
-class Node:
-    total_number_of_levels = 0
-    def __init__(self, parent, is_child, key, level,is_rectangle):
-        self.parent = parent
-        self.is_child = is_child
-        self.key = key
-        self.level = level
-        self.is_rectangle =is_rectangle
-        if(level > Node.total_number_of_levels):
-            Node.total_number_of_levels = level
+from NodeClass import Node
+from syntaxTree import draw
 class token:
   def __init__(self, value, types):
     self.value = value
@@ -318,3 +310,4 @@ token('0','NUMBER'),token('<','LESSTHAN'),token ('x','IDENTIFIER'),token('then',
 stmt_sequence(-1,-1,0)
 correction()
 print(nodelist)
+draw(nodelist)
