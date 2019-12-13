@@ -15,6 +15,10 @@ class token:
 nodelist = list()
 #len(nodelist)-1=0
 n=0
+def correction():
+    for i in range(1, len(nodelist)):
+        if nodelist[i].is_child==1:
+            setattr(nodelist[i], 'level', nodelist[int(nodelist[i].parent)].level +1)
 def is_number(s):
     try:
         float(s)
@@ -55,25 +59,30 @@ def term(parent_id,ischild,parent_level):
          nodelist.append(Node(parent_id,ischild,key,level))
          #len(nodelist)-1+=1
          op_id = len(nodelist)-1
-         parent_level=level
+         factor_level=level
          ischild=1
      if op_id<0:
-        op_id=factor(parent_id,ischild,parent_level)
+        op_id=factor(parent_id,ischild,parent_level) #it will not enter the while loop so this is the highest node
      else:
-         factor(op_id,ischild,parent_level)
+         factor(op_id,ischild,factor_level) #we care about the operation id (it's the parent of factors)
      cnt=0
      while tokens[n].value== '*' or tokens[n].value== '/':
          match(tokens[n].value)
          if cnt>0:
-             op_level=nodelist[int(op_id)].level+1
-             key=tokens[n].value
-             nodelist.append(Node(op_id,ischild,key,op_level))
-             op_new=len(nodelist)-1
-         factor(op_id,ischild,parent_level)   
+             new_op_level=level 
+             old_op_level=nodelist[int(op_id)].level+1 
+             key=tokens[n-1].value #operator
+             nodelist.append(Node(parent_id,ischild,key,new_op_level))
+             setattr(nodelist[int(op_id)], 'level', old_op_level) #old operator becomes at low level 
+             setattr(nodelist[int(op_id)], 'parent', len(nodelist)-1) #parent id is the parent of caller of this function
+             
+             op_new=len(nodelist)-1 #id of the new operator
+         else:
+             op_new=op_id   #in first loop id of operator is op_id
+         factor(op_new,ischild,factor_level)   
+         cnt+=1
          if cnt>0:
-            parent_level = op_level
             op_id=op_new
-         cnt+=1     
      return  op_id
 def comparison_op(): 
      return
@@ -97,27 +106,32 @@ def simple_exp(parent_id,ischild,parent_level):
          nodelist.append(Node(parent_id,ischild,key,level))
          #len(nodelist)-1+=1
          op_id = len(nodelist)-1
-         parent_level=level
+         term_level=level
          ischild=1
      
      if op_id<0:
         op_id=term(parent_id,ischild,parent_level)
      else:
-         term(op_id,ischild,parent_level)
+         term(op_id,ischild,term_level)
      cnt=0
      while tokens[n].value== '+' or tokens[n].value== '-':
          match(tokens[n].value)
          if cnt>0:
-             op_level=nodelist[int(op_id)].level+1
-             key=tokens[n].value
-             nodelist.append(Node(op_id,ischild,key,op_level))
-             op_new=len(nodelist)-1
+             new_op_level=level 
+             old_op_level=nodelist[int(op_id)].level+1 
+             key=tokens[n-1].value
+             nodelist.append(Node(parent_id,ischild,key,new_op_level))
+             setattr(nodelist[int(op_id)], 'level', old_op_level) #old operator becomes at low level 
+             setattr(nodelist[int(op_id)], 'parent', len(nodelist)-1) #parent id is the parent of caller of this function
+             
+             op_new=len(nodelist)-1 #id of the new operator
          ##len(nodelist)-1+=1
-         term(op_id,ischild,parent_level)
+         else:
+             op_new=op_id   #in first loop id of operator is op_id
+         term(op_new,ischild,term_level)
+         cnt+=1
          if cnt>0:
-            parent_level = op_level
-            op_id=op_new
-         cnt+=1    
+            op_id=op_new    
      return  op_id
 def exp(parent_id,ischild,parent_level):
      op_id=-1
@@ -136,26 +150,32 @@ def exp(parent_id,ischild,parent_level):
          nodelist.append(Node(parent_id,ischild,key,level))
          #len(nodelist)-1+=1
          op_id = len(nodelist)-1
-         parent_level=level
+         exp_level=level
          ischild=1
      if op_id<0:
         op_id=simple_id_l=simple_exp(parent_id,ischild,parent_level)
      else:
-         simple_id_l=simple_exp(op_id,ischild,parent_level)
+         simple_id_l=simple_exp(op_id,ischild,exp_level)
      cnt=0
      while tokens[n].value== '<' or tokens[n].value== '=':
          match(tokens[n].value)
          if cnt>0:
-             op_level=nodelist[int(op_id)].level+1
-             key=tokens[n].value
-             nodelist.append(Node(op_id,ischild,key,op_level))
-             op_new=len(nodelist)-1
+             new_op_level=level 
+             old_op_level=nodelist[int(op_id)].level+1 
+             key=tokens[n-1].value
+             nodelist.append(Node(parent_id,ischild,key,new_op_level))
+             setattr(nodelist[int(op_id)], 'level', old_op_level) #old operator becomes at low level 
+             setattr(nodelist[int(op_id)], 'parent', len(nodelist)-1) #parent id is the parent of caller of this function
+             
+             op_new=len(nodelist)-1 #id of the new operator
          ##len(nodelist)-1+=1
-         simple_id_r=simple_exp(op_id,ischild,parent_level)
-         if cnt>0:
-            parent_level = op_level
-            op_id=op_new
+         else:
+             op_new=op_id   #in first loop id of operator is op_id
+         ##len(nodelist)-1+=1
+         simple_id_r=simple_exp(op_new,ischild,exp_level)
          cnt+=1
+         if cnt>0:
+            op_id=op_new
      return op_id      
 def factor (parent_id,ischild,parent_level):
     if tokens[n].value== "(" :
@@ -290,7 +310,8 @@ def stmt_sequence(parent_id,ischild,parent_level):
 tokens=[token('read','READ'),token ('x','IDENTIFIER'),token (';','SEMICOLON'),token('if','IF'),
 token('0','NUMBER'),token('<','LESSTHAN'),token ('x','IDENTIFIER'),token('then','THEN'),token ('fact','IDENTIFIER')
 ,token (':=','ASSIGN'),token('1','NUMBER'),token (';','SEMICOLON'),token('repeat','REPEAT'),token ('fact','IDENTIFIER')
-,token (':=','ASSIGN'),token ('fact','IDENTIFIER'),token ('*','MULT'),token ('x','IDENTIFIER'),token (';','SEMICOLON'),token ('x','IDENTIFIER'),token (':=','ASSIGN'),token ('x','IDENTIFIER'),token ('-','MINUS'),token('1','NUMBER')
+,token (':=','ASSIGN'),token ('fact','IDENTIFIER'),token ('+','PLUS'),token ('x','IDENTIFIER'),token ('*','MULT'),token ('y','IDENTIFIER'),token (';','SEMICOLON'),token ('x','IDENTIFIER'),token (':=','ASSIGN'),token ('x','IDENTIFIER'),token ('-','MINUS'),token('1','NUMBER')
 ,token('until','UNTIL'),token ('x','IDENTIFIER'),token ('=','EQUAL'),token('0','NUMBER'),token (';','SEMICOLON'),token('write','WRITE'),token ('fact','IDENTIFIER'),token ('end','END')]
-stmt_sequence(0,0,0)
+stmt_sequence(-1,-1,0)
+correction()
 print(nodelist)
