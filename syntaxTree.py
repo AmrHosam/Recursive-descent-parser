@@ -26,12 +26,11 @@ nodes.append(Node(7, 0, "write", 2))                #19
 nodes.append(Node(19, 1, "id\n(fact)", 3))          #20
 
 
-
 y_step = -2
 x_step = 1
 level_pos = []
 for i in range(Node.total_number_of_levels):
-    level_pos.append([0,y_step * i])
+    level_pos.append([-50,y_step * i])
 G=nx.Graph()
 counter = 0
 for node in nodes:
@@ -39,8 +38,14 @@ for node in nodes:
         shape = "o"
     else:
         shape = "s"
-    pos = (level_pos[node.level - 1][0], level_pos[node.level - 1][1])
-    level_pos[node.level - 1][0] = level_pos[node.level - 1][0] + x_step
+    if node.parent != -1:
+        x = nodes[node.parent].posX + nodes[node.parent].number_of_children - 1
+        nodes[node.parent].number_of_children += 1
+    else:
+        x = 0
+    pos = (max(x, level_pos[node.level - 1][0]), level_pos[node.level - 1][1])
+    node.posX = max(x, level_pos[node.level - 1][0])
+    level_pos[node.level - 1][0] = max(x, level_pos[node.level - 1][0]) + x_step
     G.add_node(counter, s = shape, pos = pos, label  = node.key)
     if node.parent >= 0:
         G.add_edge(counter, node.parent)
