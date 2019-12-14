@@ -42,6 +42,7 @@ def getToken(tokens):
     n=n+1
     return n
 def error():
+    print ('Error')
     raise Exception('Error')
     return
 def match (expectedToken):
