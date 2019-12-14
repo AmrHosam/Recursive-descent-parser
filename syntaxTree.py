@@ -12,17 +12,16 @@ def cmp(node1, node2):
             return -1
         else:
             return 1
-
 def draw(nodes):
     y_step = -2
     x_step = 1
     level_pos = []
     max_level = 0
-    nodes = sorted(nodes, key=functools.cmp_to_key(cmp))
     for i in range (len(nodes)):
         if nodes[i].level > max_level:
             max_level = nodes[i].level
-        print(nodes[i].key, nodes[i].parent, nodes[i].level)
+        print(nodes[i].key)
+    # nodes = sorted(nodes, key=functools.cmp_to_key(cmp))
     for i in range(max_level + 1):
         level_pos.append([-50,y_step * i])
     G=nx.Graph()
@@ -38,12 +37,48 @@ def draw(nodes):
         else:
             x = 0
         pos = (max(x, level_pos[node.level][0]), level_pos[node.level][1])
-        node.posX = max(x, level_pos[node.level - 1][0])
+        node.posX = max(x, level_pos[node.level][0])
         level_pos[node.level][0] = max(x, level_pos[node.level][0]) + x_step
         G.add_node(counter, s = shape, pos = pos, label  = node.key)
         if node.parent >= 0:
             G.add_edge(counter, node.parent)
         counter = counter + 1
+
+
+    # visited = [0 * len(nodes)]
+    # nodes_added = 0
+    # node_no = 0
+    # while nodes_added < len(nodes):
+    #     node_no = counter
+    #     while nodes[counter].parent != -1:
+    #         if visited[nodes[counter].parent] == 0:
+    #             counter = nodes[counter].parent
+    #         else:
+    #             break
+    #     node = nodes[counter]
+    #     visited[counter] = 1
+
+    #     if node.is_rectangle == 0:
+    #         shape = "o"
+    #     else:
+    #         shape = "s"
+    #     if node.parent != -1:
+    #         x = nodes[node.parent].posX + nodes[node.parent].number_of_children - 1
+    #         nodes[node.parent].number_of_children += 1
+    #     else:
+    #         x = 0
+    #     pos = (max(x, level_pos[node.level][0]), level_pos[node.level][1])
+    #     node.posX = max(x, level_pos[node.level][0])
+    #     level_pos[node.level][0] = max(x, level_pos[node.level][0]) + x_step
+    #     G.add_node(nodes_added, s = shape, pos = pos, label  = node.key)
+    #     if node.parent >= 0:
+    #         G.add_edge(nodes_added, node.parent)
+
+    #     nodes_added += 1
+    #     if visited[node_no] == 0:
+    #         counter = node_no
+    #     else:
+    #         counter = node_no + 1
     pos = {}
     shape = {}
     label = {}
