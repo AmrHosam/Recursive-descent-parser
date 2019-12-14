@@ -316,6 +316,8 @@ def statement(parent_id,ischild,parent_level):
 def stmt_sequence(parent_id,ischild,parent_level):
      #global len(nodelist)-1
      parent_id=statement(parent_id,ischild,parent_level)
+     if n >= len(tokens):
+        return parent_id
      while tokens[n].value== ';' :
          match(';')
          parent_id =statement(parent_id,0,parent_level)
