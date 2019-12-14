@@ -8,6 +8,25 @@ class token:
 nodelist = list()
 #len(nodelist)-1=0
 n=0
+
+tokens=list()
+# tokenslist=[token('read','READ'),token ('x','IDENTIFIER'),token (';','SEMICOLON'),token('if','IF'),
+# token('0','NUMBER'),token('<','LESSTHAN'),token ('x','IDENTIFIER'),token('then','THEN'),token ('fact','IDENTIFIER')
+# ,token (':=','ASSIGN'),token('1','NUMBER'),token (';','SEMICOLON'),token('repeat','REPEAT'),token ('fact','IDENTIFIER')
+# ,token (':=','ASSIGN'),token ('fact','IDENTIFIER'),token ('+','PLUS'),token ('x','IDENTIFIER'),token ('*','MULT'),token ('y','IDENTIFIER'),token ('-','MINUS'),token ('z','IDENTIFIER'),token ('+','PLUS'),token ('t','IDENTIFIER'),token ('/','DIV'),token ('g','IDENTIFIER'),token (';','SEMICOLON'),token ('x','IDENTIFIER'),token (':=','ASSIGN'),token ('x','IDENTIFIER'),token ('-','MINUS'),token('1','NUMBER')
+# ,token('until','UNTIL'),token ('x','IDENTIFIER'),token ('=','EQUAL'),token('0','NUMBER'),token (';','SEMICOLON'),token('write','WRITE'),token ('fact','IDENTIFIER'),token ('end','END')]
+def init_tokens(tokenslist):
+    global tokens
+    for i in range(len(tokenslist)):
+        tokens.append(tokenslist[i])
+    return
+def initialize(tokenslist):
+    global n,tokens,nodelist
+    n=0
+    tokens[:] = []
+    nodelist[:] = []
+    init_tokens(tokenslist)
+    return
 def correction():
     for i in range(1, len(nodelist)):
         if nodelist[i].is_child==1:
@@ -23,7 +42,8 @@ def getToken(tokens):
     n=n+1
     return n
 def error():
-    print('error')
+    print ('Error')
+    raise Exception('Error')
     return
 def match (expectedToken):
 
@@ -42,7 +62,7 @@ def term(parent_id,ischild,parent_level):
                  m=m+1
          m=m+1
      if m< len(tokens) and (tokens[m].value== '*' or tokens[m].value== '/'):
-         key = "op (" + tokens[m].value + ")"
+         key = "op\n(" + tokens[m].value + ")"
          if len(nodelist)>0:
              level=nodelist[int(parent_id)].level
          else:
@@ -89,7 +109,7 @@ def simple_exp(parent_id,ischild,parent_level):
                  m=m+1
          m=m+1
      if m< len(tokens) and (tokens[m].value== '+' or tokens[m].value== '-'):
-         key = "op (" + tokens[m].value + ")"
+         key = "op\n(" + tokens[m].value + ")"
          if len(nodelist)>0:
              level=nodelist[int(parent_id)].level
          else:
@@ -133,7 +153,7 @@ def exp(parent_id,ischild,parent_level):
      while (tokens[m].type == 'IDENTIFIER' or tokens[m].type == 'NUMBER' or tokens[m].value == '+' or tokens[m].value == '-' or tokens[m].value == '*' or tokens[m].value == '/' or tokens[m].value == '(' or tokens[m].value == ')') and m< len(tokens) :   
          m=m+1
      if m< len(tokens) and (tokens[m].value== '<' or tokens[m].value== '='):
-         key = "op (" + tokens[m].value + ")"
+         key = "op\n(" + tokens[m].value + ")"
          if len(nodelist)>0:
              level=nodelist[int(parent_id)].level
          else:
@@ -179,14 +199,14 @@ def factor (parent_id,ischild,parent_level):
         match(tokens[n].value)
         if len(nodelist)>0:
             level=nodelist[int(parent_id)].level+1
-        key = 'Const (' + tokens[n-1].value + ')'
+        key = 'Const\n(' + tokens[n-1].value + ')'
         nodelist.append(Node(parent_id,ischild,key,level,0))
         factor_id=len(nodelist)-1
     elif tokens[n].type=='IDENTIFIER' :
         match(tokens[n].value)
         if len(nodelist)>0:
             level=nodelist[int(parent_id)].level+1
-        key = 'id (' + tokens[n-1].value + ')'
+        key = 'id\n(' + tokens[n-1].value + ')'
         nodelist.append(Node(parent_id,ischild,key,level,0))
         factor_id=len(nodelist)-1
     else : 
@@ -230,7 +250,7 @@ def read_statement(parent_id,ischild,parent_level):
      #global len(nodelist)-1
      match('READ')
      match('IDENTIFIER')
-     key= tokens[n-2].value + " (" + tokens[n-1].value + ")"
+     key= tokens[n-2].value + "\n(" + tokens[n-1].value + ")"
      if len(nodelist)>0:
          level=nodelist[int(parent_id)].level
      else:
@@ -246,7 +266,7 @@ def assign_statement(parent_id,ischild,parent_level):
      match('IDENTIFIER')
      key= tokens[n-1].value
      match('ASSIGN')
-     key = "assign" + " (" + key + ")"
+     key = "assign" + "\n(" + key + ")"
      if len(nodelist)>0:
          level=nodelist[int(parent_id)].level
      else:
@@ -296,18 +316,19 @@ def statement(parent_id,ischild,parent_level):
 def stmt_sequence(parent_id,ischild,parent_level):
      #global len(nodelist)-1
      parent_id=statement(parent_id,ischild,parent_level)
+     if n >= len(tokens):
+        return parent_id
      while tokens[n].value== ';' :
          match(';')
          parent_id =statement(parent_id,0,parent_level)
          if n >= len(tokens):
              break
      return parent_id
-tokens=[token('read','READ'),token ('x','IDENTIFIER'),token (';','SEMICOLON'),token('if','IF'),
-token('0','NUMBER'),token('<','LESSTHAN'),token ('x','IDENTIFIER'),token('then','THEN'),token ('fact','IDENTIFIER')
-,token (':=','ASSIGN'),token('1','NUMBER'),token (';','SEMICOLON'),token('repeat','REPEAT'),token ('fact','IDENTIFIER')
-,token (':=','ASSIGN'),token ('fact','IDENTIFIER'),token ('+','PLUS'),token ('x','IDENTIFIER'),token ('*','MULT'),token ('y','IDENTIFIER'),token ('-','MINUS'),token ('z','IDENTIFIER'),token (';','SEMICOLON'),token ('x','IDENTIFIER'),token (':=','ASSIGN'),token ('x','IDENTIFIER'),token ('-','MINUS'),token('1','NUMBER')
-,token('until','UNTIL'),token ('x','IDENTIFIER'),token ('=','EQUAL'),token('0','NUMBER'),token (';','SEMICOLON'),token('write','WRITE'),token ('fact','IDENTIFIER'),token ('end','END')]
-stmt_sequence(-1,-1,0)
-correction()
-print(nodelist)
-draw(nodelist)
+# initialize(tokenslist)
+# try:
+#     stmt_sequence(-1,-1,0)
+#     correction()
+#     print(nodelist)
+#     draw(nodelist)
+# except Exception:
+#     pass
