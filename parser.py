@@ -60,7 +60,11 @@ def term(parent_id,ischild,parent_level):
          if tokens[m]=='(':
              while tokens[m+1]!=')':
                  m=m+1
+                 if m+1>=len(tokens):
+                    error()
          m=m+1
+         if m>=len(tokens):
+            break
      if m< len(tokens) and (tokens[m].value== '*' or tokens[m].value== '/'):
          key = "op\n(" + tokens[m].value + ")"
          if len(nodelist)>0:
@@ -107,7 +111,11 @@ def simple_exp(parent_id,ischild,parent_level):
          if tokens[m]=='(':
              while tokens[m+1]!=')':
                  m=m+1
+                 if m+1>=len(tokens):
+                    error()
          m=m+1
+         if m>=len(tokens):
+            break
      if m< len(tokens) and (tokens[m].value== '+' or tokens[m].value== '-'):
          key = "op\n(" + tokens[m].value + ")"
          if len(nodelist)>0:
@@ -152,6 +160,8 @@ def exp(parent_id,ischild,parent_level):
      m=n
      while (tokens[m].type == 'IDENTIFIER' or tokens[m].type == 'NUMBER' or tokens[m].value == '+' or tokens[m].value == '-' or tokens[m].value == '*' or tokens[m].value == '/' or tokens[m].value == '(' or tokens[m].value == ')') and m< len(tokens) :   
          m=m+1
+         if m>=len(tokens):
+            break
      if m< len(tokens) and (tokens[m].value== '<' or tokens[m].value== '='):
          key = "op\n(" + tokens[m].value + ")"
          if len(nodelist)>0:
