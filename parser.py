@@ -100,6 +100,8 @@ def term(parent_id,ischild,parent_level):
          cnt+=1
          if cnt>0:
             op_id=op_new
+         if n>=len(tokens):
+             break   
      return  op_id
 def comparison_op(): 
      return
@@ -153,6 +155,8 @@ def simple_exp(parent_id,ischild,parent_level):
          cnt+=1
          if cnt>0:
             op_id=op_new    
+         if n>=len(tokens):
+             break
      return  op_id
 def exp(parent_id,ischild,parent_level):
      op_id=-1
@@ -199,6 +203,8 @@ def exp(parent_id,ischild,parent_level):
          cnt+=1
          if cnt>0:
             op_id=op_new
+         if n>=len(tokens):
+             break
      return op_id      
 def factor (parent_id,ischild,parent_level):
     if tokens[n].value== "(" :
