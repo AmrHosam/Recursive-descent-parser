@@ -87,25 +87,26 @@ def term(parent_id,ischild,parent_level):
      else:
          factor(op_id,ischild,factor_level) #we care about the operation id (it's the parent of factors)
      cnt=0
-     while tokens[n].value== '*' or tokens[n].value== '/':
-         match(tokens[n].value)
-         if cnt>0:
-             new_op_level=level 
-             old_op_level=nodelist[int(op_id)].level+1 
-             key="op\n(" + tokens[n-1].value + ")" #operator
-             nodelist.append(Node(parent_id,ischild,key,new_op_level,0))
-             setattr(nodelist[int(op_id)], 'level', old_op_level) #old operator becomes at low level 
-             setattr(nodelist[int(op_id)], 'parent', len(nodelist)-1) #parent id is the parent of caller of this function
-             
-             op_new=len(nodelist)-1 #id of the new operator
-         else:
-             op_new=op_id   #in first loop id of operator is op_id
-         factor(op_new,ischild,factor_level)   
-         cnt+=1
-         if cnt>0:
-            op_id=op_new
-         if n>=len(tokens):
-             break   
+     if n<len(tokens):
+        while tokens[n].value== '*' or tokens[n].value== '/':
+            match(tokens[n].value)
+            if cnt>0:
+                new_op_level=level 
+                old_op_level=nodelist[int(op_id)].level+1 
+                key="op\n(" + tokens[n-1].value + ")"#operator
+                nodelist.append(Node(parent_id,ischild,key,new_op_level,0))
+                setattr(nodelist[int(op_id)], 'level', old_op_level) #old operator becomes at low level 
+                setattr(nodelist[int(op_id)], 'parent', len(nodelist)-1) #parent id is the parent of caller of this function
+                
+                op_new=len(nodelist)-1 #id of the new operator
+            else:
+                op_new=op_id   #in first loop id of operator is op_id
+            factor(op_new,ischild,factor_level)   
+            cnt+=1
+            if cnt>0:
+               op_id=op_new
+            if n>=len(tokens):
+                break   
      return  op_id
 def comparison_op(): 
      return
@@ -143,26 +144,27 @@ def simple_exp(parent_id,ischild,parent_level):
      else:
          term(op_id,ischild,term_level)
      cnt=0
-     while tokens[n].value== '+' or tokens[n].value== '-':
-         match(tokens[n].value)
-         if cnt>0:
-             new_op_level=level 
-             old_op_level=nodelist[int(op_id)].level+1 
-             key="op\n(" + tokens[n-1].value + ")"
-             nodelist.append(Node(parent_id,ischild,key,new_op_level,0))
-             setattr(nodelist[int(op_id)], 'level', old_op_level) #old operator becomes at low level 
-             setattr(nodelist[int(op_id)], 'parent', len(nodelist)-1) #parent id is the parent of caller of this function
-             
-             op_new=len(nodelist)-1 #id of the new operator
-         ##len(nodelist)-1+=1
-         else:
-             op_new=op_id   #in first loop id of operator is op_id
-         term(op_new,ischild,term_level)
-         cnt+=1
-         if cnt>0:
-            op_id=op_new    
-         if n>=len(tokens):
-             break
+     if n<len(tokens):
+        while tokens[n].value== '+' or tokens[n].value== '-':
+            match(tokens[n].value)
+            if cnt>0:
+                new_op_level=level 
+                old_op_level=nodelist[int(op_id)].level+1 
+                key="op\n(" + tokens[n-1].value + ")"
+                nodelist.append(Node(parent_id,ischild,key,new_op_level,0))
+                setattr(nodelist[int(op_id)], 'level', old_op_level) #old operator becomes at low level 
+                setattr(nodelist[int(op_id)], 'parent', len(nodelist)-1) #parent id is the parent of caller of this function
+
+                op_new=len(nodelist)-1 #id of the new operator
+            ##len(nodelist)-1+=1
+            else:
+                op_new=op_id   #in first loop id of operator is op_id
+            term(op_new,ischild,term_level)
+            cnt+=1
+            if cnt>0:
+               op_id=op_new    
+            if n>=len(tokens):
+                break
      return  op_id
 def exp(parent_id,ischild,parent_level):
      op_id=-1
@@ -192,27 +194,28 @@ def exp(parent_id,ischild,parent_level):
      else:
          simple_id_l=simple_exp(op_id,ischild,exp_level)
      cnt=0
-     while tokens[n].value== '<' or tokens[n].value== '=':
-         match(tokens[n].value)
-         if cnt>0:
-             new_op_level=level 
-             old_op_level=nodelist[int(op_id)].level+1 
-             key="op\n(" + tokens[n-1].value + ")"
-             nodelist.append(Node(parent_id,ischild,key,new_op_level,0))
-             setattr(nodelist[int(op_id)], 'level', old_op_level) #old operator becomes at low level 
-             setattr(nodelist[int(op_id)], 'parent', len(nodelist)-1) #parent id is the parent of caller of this function
-             
-             op_new=len(nodelist)-1 #id of the new operator
-         ##len(nodelist)-1+=1
-         else:
-             op_new=op_id   #in first loop id of operator is op_id
-         ##len(nodelist)-1+=1
-         simple_id_r=simple_exp(op_new,ischild,exp_level)
-         cnt+=1
-         if cnt>0:
-            op_id=op_new
-         if n>=len(tokens):
-             break
+     if n<len(tokens):
+        while tokens[n].value== '<' or tokens[n].value== '=':
+            match(tokens[n].value)
+            if cnt>0:
+                new_op_level=level 
+                old_op_level=nodelist[int(op_id)].level+1 
+                key="op\n(" + tokens[n-1].value + ")"
+                nodelist.append(Node(parent_id,ischild,key,new_op_level,0))
+                setattr(nodelist[int(op_id)], 'level', old_op_level) #old operator becomes at low level 
+                setattr(nodelist[int(op_id)], 'parent', len(nodelist)-1) #parent id is the parent of caller of this function
+
+                op_new=len(nodelist)-1 #id of the new operator
+            ##len(nodelist)-1+=1
+            else:
+                op_new=op_id   #in first loop id of operator is op_id
+            ##len(nodelist)-1+=1
+            simple_id_r=simple_exp(op_new,ischild,exp_level)
+            cnt+=1
+            if cnt>0:
+               op_id=op_new
+            if n>=len(tokens):
+                break
      return op_id      
 def factor (parent_id,ischild,parent_level):
     if tokens[n].value== "(" :
