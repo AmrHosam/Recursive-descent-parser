@@ -92,7 +92,7 @@ def term(parent_id,ischild,parent_level):
          if cnt>0:
              new_op_level=level 
              old_op_level=nodelist[int(op_id)].level+1 
-             key=tokens[n-1].value #operator
+             key="op\n(" + tokens[n-1].value + ")" #operator
              nodelist.append(Node(parent_id,ischild,key,new_op_level,0))
              setattr(nodelist[int(op_id)], 'level', old_op_level) #old operator becomes at low level 
              setattr(nodelist[int(op_id)], 'parent', len(nodelist)-1) #parent id is the parent of caller of this function
@@ -148,7 +148,7 @@ def simple_exp(parent_id,ischild,parent_level):
          if cnt>0:
              new_op_level=level 
              old_op_level=nodelist[int(op_id)].level+1 
-             key=tokens[n-1].value
+             key="op\n(" + tokens[n-1].value + ")"
              nodelist.append(Node(parent_id,ischild,key,new_op_level,0))
              setattr(nodelist[int(op_id)], 'level', old_op_level) #old operator becomes at low level 
              setattr(nodelist[int(op_id)], 'parent', len(nodelist)-1) #parent id is the parent of caller of this function
@@ -197,7 +197,7 @@ def exp(parent_id,ischild,parent_level):
          if cnt>0:
              new_op_level=level 
              old_op_level=nodelist[int(op_id)].level+1 
-             key=tokens[n-1].value
+             key="op\n(" + tokens[n-1].value + ")"
              nodelist.append(Node(parent_id,ischild,key,new_op_level,0))
              setattr(nodelist[int(op_id)], 'level', old_op_level) #old operator becomes at low level 
              setattr(nodelist[int(op_id)], 'parent', len(nodelist)-1) #parent id is the parent of caller of this function
