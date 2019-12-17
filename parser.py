@@ -46,14 +46,18 @@ def error():
     raise Exception('Error')
     return
 def match (expectedToken):
-
-    if tokens[n].value == expectedToken or tokens[n].type == expectedToken:
-        getToken(tokens)
+    if n<len(tokens):
+        if tokens[n].value == expectedToken or tokens[n].type == expectedToken:
+            getToken(tokens)
+        else:
+            error()
     else:
         error()
     return
 def term(parent_id,ischild,parent_level):
      #global len(nodelist)-1
+     if n>=len(tokens):
+        error()
      m=n
      op_id=-1
      while (tokens[m].type == 'IDENTIFIER' or tokens[m].type == 'NUMBER' or   tokens[m].value == '(' or tokens[m].value == ')' ) and m< len(tokens) :
@@ -109,6 +113,8 @@ def simple_exp(parent_id,ischild,parent_level):
      op_id=-1
      #global len(nodelist)-1
      m=n
+     if n>=len(tokens):
+        error()
      while (tokens[m].type == 'IDENTIFIER' or tokens[m].type == 'NUMBER' or tokens[m].value == '*' or tokens[m].value == '/' or tokens[m].value == '(' or tokens[m].value == ')' ) and m< len(tokens) :   
          if tokens[m]=='(':
              while tokens[m+1]!=')':
@@ -162,6 +168,8 @@ def exp(parent_id,ischild,parent_level):
      op_id=-1
      #global len(nodelist)-1
      m=n
+     if n>=len(tokens):
+        error()
      while (tokens[m].type == 'IDENTIFIER' or tokens[m].type == 'NUMBER' or tokens[m].value == '+' or tokens[m].value == '-' or tokens[m].value == '*' or tokens[m].value == '/' or tokens[m].value == '(' or tokens[m].value == ')') and m< len(tokens) :   
          m=m+1
          if m>=len(tokens):
@@ -299,7 +307,9 @@ def if_statement(parent_id,ischild,parent_level):
      #global len(nodelist)-1
      match('IF')
      if len(nodelist)>0:
-         level=nodelist[int(parent_id)].level    
+         level=nodelist[int(parent_id)].level
+     else:
+         level=parent_level
      if ischild==1 :
          level = level + 1
      key= 'if'    
