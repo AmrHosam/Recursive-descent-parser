@@ -28,9 +28,12 @@ def initialize(tokenslist):
     init_tokens(tokenslist)
     return
 def correction():
-    for i in range(1, len(nodelist)):
-        if nodelist[i].is_child==1:
-            setattr(nodelist[i], 'level', nodelist[int(nodelist[i].parent)].level +1)
+    if n<len(tokens):
+        error()
+    else:
+        for i in range(1, len(nodelist)):
+            if nodelist[i].is_child==1:
+                setattr(nodelist[i], 'level', nodelist[int(nodelist[i].parent)].level +1)
 def is_number(s):
     try:
         float(s)
@@ -61,8 +64,8 @@ def term(parent_id,ischild,parent_level):
      m=n
      op_id=-1
      while (tokens[m].type == 'IDENTIFIER' or tokens[m].type == 'NUMBER' or   tokens[m].value == '(' or tokens[m].value == ')' ) and m< len(tokens) :
-         if tokens[m]=='(':
-             while tokens[m+1]!=')':
+         if tokens[m].value=='(':
+             while tokens[m+1].value!=')':
                  m=m+1
                  if m+1>=len(tokens):
                     error()
@@ -117,8 +120,8 @@ def simple_exp(parent_id,ischild,parent_level):
      if n>=len(tokens):
         error()
      while (tokens[m].type == 'IDENTIFIER' or tokens[m].type == 'NUMBER' or tokens[m].value == '*' or tokens[m].value == '/' or tokens[m].value == '(' or tokens[m].value == ')' ) and m< len(tokens) :   
-         if tokens[m]=='(':
-             while tokens[m+1]!=')':
+         if tokens[m].value=='(':
+             while tokens[m+1].value!=')':
                  m=m+1
                  if m+1>=len(tokens):
                     error()
@@ -173,6 +176,11 @@ def exp(parent_id,ischild,parent_level):
      if n>=len(tokens):
         error()
      while (tokens[m].type == 'IDENTIFIER' or tokens[m].type == 'NUMBER' or tokens[m].value == '+' or tokens[m].value == '-' or tokens[m].value == '*' or tokens[m].value == '/' or tokens[m].value == '(' or tokens[m].value == ')') and m< len(tokens) :   
+         if tokens[m].value=='(':
+             while tokens[m+1].value!=')':
+                 m=m+1
+                 if m+1>=len(tokens):
+                    error()
          m=m+1
          if m>=len(tokens):
             break
@@ -253,7 +261,7 @@ def write_statement(parent_id,ischild,parent_level):
      write_id=len(nodelist)-1
      #len(nodelist)-1+=1
      child=1
-     exp(write_id,ischild,level)
+     exp(write_id,child,level)
      return write_id
 def repeat_statement(parent_id,ischild,parent_level):
      #global len(nodelist)-1
